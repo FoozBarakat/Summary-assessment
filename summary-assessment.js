@@ -1,3 +1,5 @@
+console.log("test")
+
 // Remember to relax and ask for help when you need it (only from staff)
 // YOU CAN ONLY USE MDN AS A RESOURCE for JavaScript
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript
@@ -59,9 +61,12 @@ function each(coll, f) {
   //wordLengths("hello its me") // [5,3,2]
   
   function wordLengths(str) {
-      // TODO: your code here 
+      // TODO: your code here
+     var arr = str.split(" ");
+     return arr.map(element => element.length)
   }
   
+  console.log( wordLengths("hello its me") );
   //=============================================================================
   /*                                  Q2                                    */
   //=============================================================================
@@ -72,8 +77,16 @@ function each(coll, f) {
   // countOccurrences("hello, world!", "l"); // 3
   
   function countOccurrences(string, character) {
-      // your code is here
+     
+      return reduce(string, function(acc, element) {
+        if (element === character) {
+          acc++;
+        }
+        return acc;
+      }, 0)  
   }
+
+  console.log( countOccurrences('fooz', 'o') );
   
   //=============================================================================
   /*                                  Q3                                    */
@@ -84,8 +97,11 @@ function each(coll, f) {
   // wordsLongerThanThree("Hello Mad World") //["Hello", "World"]
   
   function wordsLongerThanThree(str) {
-      // TODO: your code here 
+    var arr = str.split(' ');
+    return arr.filter(word => word.length > 3)
   }
+
+  console.log( wordsLongerThanThree("Hello Mad World") );
   
   //=============================================================================
   /*                                  Q4                                        */
@@ -98,9 +114,19 @@ function each(coll, f) {
   //repeatString('dog', 2); // => 'dog' + 'dog' => 'dogdog' 
   //repeatString('dog', 3); // => 'dog' + 'dog' + 'dog' => 'dogdogdog'
   
-  function repeatString(str, count) { 
-   // TODO: your code here 
+  function repeatString(str, count, result) { 
+   var result = result || '';
+
+    if ( count === 0 ) {
+      return result;
+    }
+
+    result += str;
+
+    return repeatString(str, count - 1, result);
   } 
+
+  console.log( repeatString('dog', 4) );
    
   
   //=============================================================================
@@ -129,7 +155,40 @@ function each(coll, f) {
   // pizza.eatSlice();
   
   // Write your code here .....
-  
+
+  function makePizza(crust, size, numberOfSlice) {
+   var obj = {
+    crust: crust,
+    size: size,
+    numberOfSlice: numberOfSlice
+   }  
+   return {
+    addIngredients: function(string) {
+      obj.addIngredients = string;
+      return obj;
+    },
+    //setInterval(function(){  }, 3000);
+    bakePizza: function() {
+      var keys = Object.keys(obj);
+      var val = Object.values(obj);
+      var result = '';
+      for ( var i = 0; i < keys.length; i++) {
+        result += keys[i] + ": " + val[i] + "\n";
+      }
+      return result;
+   },
+   eatSlice: function() {
+    if (obj.numberOfSlice > 0) {
+      obj.numberOfSlice = obj.numberOfSlice - 1;
+      return "still have " + obj.numberOfSlice;
+    } else {
+      return 'you finished the pizza';
+    }
+   }
+  }
+}
+
+
   //=============================================================================
   /*                                  Q6                                      */
   //=============================================================================
@@ -153,9 +212,31 @@ function each(coll, f) {
   */
   
   // Now, to make sure that you are actually reading, make a comment below this and type: Yes I am
-  
+  // Yes I am
   // Write your code here .....
   
+  function AddBook(bookName) {
+    obj = {};
+    obj.unRead = 0;
+    obj.toRead = [];   
+    obj.addBook = addBook;
+    obj.read = 0;
+    obj.readBooks = [];
+
+    return obj;
+  }
+
+ function addBook(name) {
+  this.toRead = this.toRead.push(name);
+  this.unread = this.unread + 1;
+ }
+
+ function finishCurrentBook(name) {
+  this.readBooks = this.readBooks.push(name);
+  this.read = this.read + 1;
+  this.unRead = this.unRead - 1;
+ }
+
   //=============================================================================
   /*                                  Q7                                       */
   //=============================================================================
@@ -175,6 +256,32 @@ function each(coll, f) {
   //  safe('money','small') => "watch gold-bar money"
   
   // Write your code here .....
+  function makeSafe(integer) {
+    var storage = integer;
+    var arr = Array(integer);
+    return { 
+      addItem: function(item, itemSize) {
+          var count = 0;
+          var strings = item.split("-");
+          
+          for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === undefined) {
+              count++;
+            }
+          }
+          console.log(count)
+          if (count <= itemSize) {
+            for (var i = 0; i < strings.length; i++) {
+              arr.push(strings[i])
+            }
+          } else {
+              return 'Can\'t fit';
+            }
+
+          return arr.join(' ');
+        }
+      }
+    }
   
   //=============================================================================
   /*                                  Q8                                       */
@@ -188,8 +295,21 @@ function each(coll, f) {
   //If the color value is red, yellow or blue
   //Add the CSS class to the item accordingly
   //Do not add a list item if the color value is non of the colors
-  
   //DO NOT USE JQUERY
+  
+
+  $('#btn').click(function () {
+    var text = $('#input_1').val();
+    var color = $('#input_2').val();
+    if ( color === 'red' || color === 'yellow' || color === 'blue') {
+    $('ul').append('<li>' + text + '/li')
+  } else {
+    alert('choose another color');
+  }
+
+  });
+  
+
   
   //================================================================================
   /*                              Q9                                            */
@@ -216,10 +336,17 @@ function each(coll, f) {
   //================================================================================
   // Theoretical questions.
   // 1- In your own words,Why do we use Closures ?
+      // we use closure so we can limit the use of global varible, because the roles of global is to use a local var and the parameter
   
   // 2- In OOP, what does "this" refer to ?
-  
+    // to the object on the class.
+
   // 3- What is jQuery?
-  
+    // it's a libary that simple and less the javascript code
+
   // 4- what is the diffrence between Closure's methods and The OOP's methods?
+   // the main diffrence is that oop use less momory, because we are only storing the function one time
+   // but the closure will store the function evry time when we declare a new var,
+   // but the main idea is basicllay the same we can't use global varibles, only local and
+   // parameters
   
